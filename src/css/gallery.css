@@ -1,10 +1,14 @@
+html {
+  scroll-behavior: smooth;
+}
+
 .form {
   display: flex;
   align-items: center;
   gap: 8px;
   justify-content: center; 
   margin-top: 36px;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
 }
 
 .image-input {
@@ -21,7 +25,8 @@
   color: #808080;
 }
 
-.form button {
+.form button,
+.load-more-btn {
   min-width: 91px;
   max-height: 40px;
   box-sizing: border-box;
@@ -36,7 +41,19 @@
   cursor: pointer;
 }
 
-.form button:hover {
+.load-more-btn {
+  min-width: 125px;
+}
+
+.btn-cont {
+  margin-top: 32px;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: center;
+}
+
+.form button:hover,
+.load-more-btn:hover {
   background-color: #6c8cff;
 }
 
@@ -184,3 +201,4 @@ main {
 .hidden {
   display: none;
 }
+
