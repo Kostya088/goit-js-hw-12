@@ -37,6 +37,7 @@ form.addEventListener('submit', async event => {
   page = 1;
 
   if (!query) {
+    showError(`Please, enter your search query to get photos.`);
     return;
   }
 
@@ -46,6 +47,8 @@ form.addEventListener('submit', async event => {
   try {
     const data = await getImagesByQuery(query, page);
 
+    totalPages = Math.ceil(data.totalHits / imgPerPageLimit);
+
     if (data.hits.length === 0) {
       showError(
         'Sorry, there are no images matching your search query. <br>Please try again!'
@@ -54,21 +57,27 @@ form.addEventListener('submit', async event => {
       event.target.reset();
       return;
     }
-
-    totalPages = Math.ceil(data.totalHits / imgPerPageLimit);
-
-    createGallery(data.hits);
+    if (page === totalPages) {
+      createGallery(data.hits);
+      showError(`We're sorry, but you've reached the end of search results.`);
+    }
+    if (page < totalPages) {
+      createGallery(data.hits);
+      showLoadMoreButton();
+    }
   } catch {
     showError('Something went wrong. Please try again.');
+    hideLoader();
   }
 
   hideLoader();
-  showLoadMoreButton();
   event.target.reset();
 });
 
 loadMoreBtn.addEventListener('click', async () => {
   page += 1;
+  hideLoadMoreButton();
+  showLoader();
 
   try {
     const data = await getImagesByQuery(queryValue, page);
@@ -77,11 +86,13 @@ loadMoreBtn.addEventListener('click', async () => {
       showError(
         'Sorry, there are no images matching your search query. <br>Please try again!'
       );
-      hideLoadMoreButton();
+      // hideLoadMoreButton();
+      hideLoader();
       return;
     }
 
     createGallery(data.hits);
+    showLoadMoreButton();
 
     const galleryItem = document.querySelector('.gallery-item');
     const box = galleryItem.getBoundingClientRect();
@@ -96,9 +107,12 @@ loadMoreBtn.addEventListener('click', async () => {
     if (page >= totalPages) {
       showError(`We're sorry, but you've reached the end of search results.`);
       hideLoadMoreButton();
+      hideLoader();
       return;
     }
   } catch {
     showError('Something went wrong. Please try again.');
+    hideLoader();
   }
+  hideLoader();
 });

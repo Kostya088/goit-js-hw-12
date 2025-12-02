@@ -5,6 +5,14 @@ const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('.loader');
 const loadMore = document.querySelector('.load-more-btn');
 
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+  animationSpeed: 350,
+  fadeSpeed: 550,
+  preloading: true,
+});
+
 export function createGallery(images) {
   const markup = images
     .map(
@@ -49,14 +57,6 @@ export function createGallery(images) {
     .join('');
 
   gallery.insertAdjacentHTML('beforeend', markup);
-
-  const lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-    animationSpeed: 350,
-    fadeSpeed: 550,
-    preloading: true,
-  });
 
   lightbox.refresh();
 }
