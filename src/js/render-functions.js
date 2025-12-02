@@ -5,13 +5,7 @@ const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('.loader');
 const loadMore = document.querySelector('.load-more-btn');
 
-const lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-  animationSpeed: 350,
-  fadeSpeed: 550,
-  preloading: true,
-});
+let lightbox = null;
 
 export function createGallery(images) {
   const markup = images
@@ -58,11 +52,26 @@ export function createGallery(images) {
 
   gallery.insertAdjacentHTML('beforeend', markup);
 
+  if (!lightbox) {
+    lightbox = new SimpleLightbox('.gallery a', {
+      captionsData: 'alt',
+      captionDelay: 250,
+      animationSpeed: 350,
+      fadeSpeed: 550,
+      preloading: true,
+    });
+  }
+
   lightbox.refresh();
 }
 
 export function clearGallery() {
   gallery.innerHTML = '';
+  if (lightbox) {
+    lightbox.destroy();
+    lightbox = null;
+  }
+  hideLoadMoreButton();
 }
 
 export function showLoader() {

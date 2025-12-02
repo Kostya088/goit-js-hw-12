@@ -42,11 +42,11 @@ form.addEventListener('submit', async event => {
   }
 
   clearGallery();
+  hideLoadMoreButton();
   showLoader();
 
   try {
     const data = await getImagesByQuery(query, page);
-
     totalPages = Math.ceil(data.totalHits / imgPerPageLimit);
 
     if (data.hits.length === 0) {
@@ -60,6 +60,7 @@ form.addEventListener('submit', async event => {
     if (page === totalPages) {
       createGallery(data.hits);
       showError(`We're sorry, but you've reached the end of search results.`);
+      hideLoadMoreButton();
     }
     if (page < totalPages) {
       createGallery(data.hits);
@@ -82,17 +83,19 @@ loadMoreBtn.addEventListener('click', async () => {
   try {
     const data = await getImagesByQuery(queryValue, page);
 
+    totalPages = Math.ceil(data.totalHits / imgPerPageLimit);
+
     if (data.hits.length === 0) {
       showError(
         'Sorry, there are no images matching your search query. <br>Please try again!'
       );
-      // hideLoadMoreButton();
+      hideLoadMoreButton();
       hideLoader();
       return;
     }
 
     createGallery(data.hits);
-    showLoadMoreButton();
+    // showLoadMoreButton();
 
     const galleryItem = document.querySelector('.gallery-item');
     const box = galleryItem.getBoundingClientRect();
@@ -110,6 +113,8 @@ loadMoreBtn.addEventListener('click', async () => {
       hideLoader();
       return;
     }
+
+    showLoadMoreButton();
   } catch {
     showError('Something went wrong. Please try again.');
     hideLoader();
